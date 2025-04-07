@@ -1,0 +1,52 @@
+name: Rust CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check_and_test: # 可以给 job 起个更描述性的名字
+    name: Check, Build & Test # Job 在 UI 中显示的名字
+    runs-on: macos-latest # 保持 Ubuntu 或按需改为 macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 显式安装 Rust 工具链 (推荐)
+    - name: Install Rust toolchain
+      uses: actions-rust-lang/setup-rust-toolchain@v1
+      with:
+        # 可以指定版本如 '1.70', 'stable', 'beta', 'nightly'
+        # toolchain: stable
+        # 确保安装了 clippy 和 fmt 工具
+        components: clippy, rustfmt
+
+    # 缓存 Cargo 依赖项以加速后续运行 (强烈推荐)
+    - name: Cache Cargo dependencies
+      uses: Swatinem/rust-cache@v2
+      # 这个 action 会自动处理 ~/.cargo 和 target 目录的缓存
+
+    # 检查代码格式 (好习惯)
+    - name: Check formatting
+      run: cargo fmt --check
+
+    # 运行 Clippy Linter (强烈推荐，捕获常见问题)
+    # --all-targets 检查包括 tests, examples 等
+    # -D warnings 将 Clippy 警告视为错误，使 CI 失败
+    - name: Run Clippy
+      run: cargo clippy --all-targets --all-features -- -D warnings
+
+    # 构建项目 (cargo test 会隐式构建，但显式构建可以更快发现编译错误)
+    # 如果 cargo test 已经足够，可以省略这一步
+    - name: Build project
+      run: cargo build --verbose --all-features
+
+    # 运行测试 (加入 --all-features 确保测试覆盖所有功能)
+    - name: Run tests
+      run: cargo test --verbose --all-features
