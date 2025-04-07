@@ -1,0 +1,4 @@
+[default.extend-words] # setting the deault work to check is error
+
+[files]
+extend-exclude = ["CHANGELOG.md", "notebooks/*"]
