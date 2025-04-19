@@ -1,5 +1,6 @@
 use anyhow::Result;
 use clap::Parser;
+use process::OutputFormat;
 use std::fs;
 mod process;
 fn main() -> Result<(), anyhow::Error> {
@@ -10,14 +11,15 @@ fn main() -> Result<(), anyhow::Error> {
             // parser the csv input
             let file = fs::File::open(cmd.input)?;
             let mut csv_reader = csv::Reader::from_reader(file);
-            let mut persons = Vec::with_capacity(128);
-            for result in csv_reader.deserialize() {
-                let record: process::Person = result?;
-                persons.push(record);
-            }
+            let csv_data = process::read_csv_data(&mut csv_reader)?;
             // write to json file
-            let json = serde_json::to_string_pretty(&persons)?;
-            fs::write(cmd.output, json.as_bytes())?;
+            let format = cmd.format.parse::<OutputFormat>()?;
+            let content = match format {
+                OutputFormat::Json => serde_json::to_string_pretty(&csv_data)?,
+                OutputFormat::Yaml => serde_yaml::to_string(&csv_data)?,
+                OutputFormat::Toml => process::process_toml(&csv_data, cmd.toml_root_key)?,
+            };
+            fs::write(cmd.output, content)?;
         }
     }
 
