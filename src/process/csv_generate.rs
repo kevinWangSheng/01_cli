@@ -4,18 +4,6 @@ use csv::Reader;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, fs, io::Read, str::FromStr};
 // parse rcli csv --input.csv --output.json() --delimiter=, --header=true --verbose=true
-#[derive(Parser, Debug)]
-#[command(version, about, author, long_about)]
-pub struct Opts {
-    #[command(subcommand)]
-    pub cmd: SubCommand,
-}
-
-#[derive(Parser, Debug)]
-pub enum SubCommand {
-    #[command(name = "csv", about = "Convert CSV file to other format")]
-    Csv(CsvOpts),
-}
 
 #[derive(Parser, Debug)]
 pub struct CsvOpts {
