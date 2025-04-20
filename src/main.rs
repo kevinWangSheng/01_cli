@@ -1,6 +1,10 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use clap::Parser;
-use process::{Opts, SubCommand, csv_generate::*};
+use process::{
+    Opts, SubCommand,
+    base64::{Base64Ops, handle_decode, handle_encode},
+    csv_generate::*,
+};
 use std::fs;
 use template::process::password_generate::password_gen;
 use zxcvbn::zxcvbn;
@@ -36,6 +40,16 @@ fn main() -> Result<(), anyhow::Error> {
                 "the password score is :{:?}",
                 zxcvbn(&password, &[]).score()
             );
+        }
+        SubCommand::Base64(cmd) => {
+            match cmd {
+                Base64Ops::Encode(args) => {
+                    handle_encode(args).context("执行编码时出错")?; // 添加错误上下文
+                }
+                Base64Ops::Decode(args) => {
+                    handle_decode(args).context("执行解码时出错")?; // 添加错误上下文
+                }
+            }
         }
     }
 

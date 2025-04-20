@@ -1,5 +1,7 @@
+pub mod base64;
 pub mod csv_generate;
 pub mod password_generate;
+use base64::Base64Ops;
 use clap::Parser;
 use csv_generate::CsvOpts;
 use password_generate::PasswordOpts;
@@ -17,4 +19,6 @@ pub enum SubCommand {
     Csv(CsvOpts),
     #[command(name = "password-gen", about = "Generate password")]
     Password(PasswordOpts),
+    #[command(subcommand)]
+    Base64(Base64Ops),
 }
