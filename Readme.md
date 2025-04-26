@@ -15,3 +15,5 @@ workspace = true
 `cargo install --path .`
 
 `cargo run --csv --input sample.csv --output output.json`
+
+`echo "这是要签名的重要消息" | cargo run --release --bin first_cli -- text sign --format ed25519 --key ./fixtures/ed25519.sk`
