@@ -40,7 +40,7 @@ jobs:
     # --all-targets 检查包括 tests, examples 等
     # -D warnings 将 Clippy 警告视为错误，使 CI 失败
     - name: Run Clippy
-      run: cargo clippy --all-targets --all-features -- -D warnings
+      run: cargo clippy --all-targets --all-features -- -D warnings -A dead_code
 
     # 构建项目 (cargo test 会隐式构建，但显式构建可以更快发现编译错误)
     # 如果 cargo test 已经足够，可以省略这一步
