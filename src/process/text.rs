@@ -6,7 +6,6 @@ use ed25519_dalek::{
 };
 use rand::{Rng, rngs::OsRng};
 use std::{collections::HashMap, io::Read};
-
 // 假设 TextFormat 定义在 crate::cli::text 模块下
 use crate::cli::text::TextFormat;
 // 假设 password_generate 定义在父模块下的 password_generate 子模块
@@ -159,6 +158,7 @@ impl TextVerifier for Ed25519Verifier {
 }
 
 // --- 处理函数 ---
+#[allow(dead_code)]
 pub fn process_text_sign(input: &mut dyn Read, key: &[u8], format: TextFormat) -> Result<Vec<u8>> {
     let signer: Box<dyn TextSigner> = match format {
         TextFormat::Blake3 => Box::new(Blake3::try_new(key)?),
@@ -169,6 +169,8 @@ pub fn process_text_sign(input: &mut dyn Read, key: &[u8], format: TextFormat) -
 
     signer.sign(input)
 }
+
+#[allow(dead_code)]
 pub fn process_text_verify(
     input: &mut dyn Read,
     key: &[u8], // 注意：对于 Ed25519，这里应该是公钥
