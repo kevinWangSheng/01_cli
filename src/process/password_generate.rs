@@ -1,24 +1,9 @@
+use crate::cli::password::*;
 use anyhow::bail;
-use clap::Parser;
-use rand::seq::{IteratorRandom, SliceRandom};
-#[derive(Debug, Parser)]
-pub struct PasswordOpts {
-    #[clap(long, default_value_t = 16)]
-    pub length: usize,
-    #[clap(long, default_value_t = true)]
-    pub uppercase: bool,
-    #[clap(long, default_value_t = true)]
-    pub lowercase: bool,
-    #[clap(long, default_value_t = true)]
-    pub digits: bool,
-    #[clap(long, default_value_t = true)]
-    pub symbols: bool,
-}
-
-pub const UPPER_CASE: &str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-pub const LOWER_CASE: &str = "abcdefghijklmnopqrstuvwxyz";
-pub const DIGITS: &str = "0123456789";
-pub const SYMBOLS: &str = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+use rand::{
+    seq::{IteratorRandom, SliceRandom},
+    thread_rng,
+};
 
 #[allow(dead_code)]
 pub fn password_gen(
@@ -34,7 +19,7 @@ pub fn password_gen(
     }
 
     let mut requeire_chars = Vec::new();
-    let mut rng = rand::rng();
+    let mut rng = thread_rng(); // <-- 使用 thread_rng() 获取 RNG
     let mut char_pool = String::new();
     if uppercase {
         char_pool.push_str(UPPER_CASE);
