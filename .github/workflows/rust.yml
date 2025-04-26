@@ -45,8 +45,8 @@ jobs:
     # 构建项目 (cargo test 会隐式构建，但显式构建可以更快发现编译错误)
     # 如果 cargo test 已经足够，可以省略这一步
     - name: Build project
-      run: cargo build --verbose --all-features -A dead_code
+      run: cargo build --verbose --all-features -- -A dead_code
 
     # 运行测试 (加入 --all-features 确保测试覆盖所有功能)
     - name: Run tests
-      run: cargo test --verbose --all-features -A dead_code
+      run: cargo test --verbose --all-features -- -A dead_code
