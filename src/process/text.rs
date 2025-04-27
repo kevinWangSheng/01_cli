@@ -158,7 +158,7 @@ impl TextVerifier for Ed25519Verifier {
 }
 
 // --- 处理函数 ---
-#[allow(dead_code)]
+
 pub fn process_text_sign(input: &mut dyn Read, key: &[u8], format: TextFormat) -> Result<Vec<u8>> {
     let signer: Box<dyn TextSigner> = match format {
         TextFormat::Blake3 => Box::new(Blake3::try_new(key)?),
@@ -170,7 +170,6 @@ pub fn process_text_sign(input: &mut dyn Read, key: &[u8], format: TextFormat) -
     signer.sign(input)
 }
 
-#[allow(dead_code)]
 pub fn process_text_verify(
     input: &mut dyn Read,
     key: &[u8], // 注意：对于 Ed25519，这里应该是公钥

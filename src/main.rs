@@ -5,18 +5,15 @@ use base64::prelude::BASE64_URL_SAFE_NO_PAD;
 use clap::Parser;
 use first_cli::cli::base64::Base64Ops;
 use first_cli::cli::csv::OutputFormat; // 导入 OutputFormat
-use first_cli::cli::{self, SubCommand}; // 导入 cli 模块和 SubCommand 枚举
-use first_cli::process::text::{process_text_sign, process_text_verify};
+use first_cli::cli::{self, SubCommand};
+use first_cli::process::b64::{handle_decode, handle_encode};
+use first_cli::process::csv_generate::{process_toml, read_csv_data};
+use first_cli::process::password_generate::password_gen;
+// 导入 cli 模块和 SubCommand 枚举
+use first_cli::process::text::{process_key_generate, process_text_sign, process_text_verify};
 use first_cli::utils::{get_content, get_reader};
-use process::password_generate::password_gen;
-use process::text::process_key_generate;
-use process::{
-    b64::{handle_decode, handle_encode},
-    csv_generate::{process_toml, read_csv_data},
-};
 use std::fs;
 use zxcvbn::zxcvbn;
-mod process;
 fn main() -> Result<(), anyhow::Error> {
     let args = Opts::parse();
     let cmd = args.cmd;
